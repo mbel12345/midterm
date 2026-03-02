@@ -171,7 +171,7 @@ class IntegerDivision(Operation):
 
         pass
 
-class PercentageCalculation(Operation):
+class Percentage(Operation):
 
     # Calculate the percentage of one number (a) with respect to b.
     # For example, if a=1.5, b=2: result=75.
@@ -223,7 +223,7 @@ class OperationFactory:
         'root': Root,
         'modulus': Modulus,
         'int_divide': IntegerDivision,
-        'percent': PercentageCalculation,
+        'percent': Percentage,
         'abs_diff': AbsoluteDifference,
     }
 

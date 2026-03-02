@@ -6,6 +6,14 @@ class CalculationError(Exception):
 
     pass
 
+class OperationError(CalculationError):
+
+    '''
+    Raised when a calculation operation fails
+    '''
+
+    pass
+
 class ValidationError(CalculationError):
 
     '''

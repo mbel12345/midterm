@@ -11,7 +11,7 @@ from app.operations import Modulus
 from app.operations import Multiplication
 from app.operations import Operation
 from app.operations import OperationFactory
-from app.operations import PercentageCalculation
+from app.operations import Percentage
 from app.operations import Power
 from app.operations import Root
 from app.operations import Subtraction
@@ -66,7 +66,7 @@ class BaseOperationTest:
             with pytest.raises(expected_error, match=expected_message):
                 operation.execute(a, b)
 
-class TestAddition(BaseOperationTest):
+class TestAdditionOperation(BaseOperationTest):
 
     '''
     Test Addition operation
@@ -83,7 +83,7 @@ class TestAddition(BaseOperationTest):
     }
     invalid_test_cases = {}
 
-class TestSubtraction(BaseOperationTest):
+class TestSubtractionOperation(BaseOperationTest):
 
     '''
     Test Subtraction operation
@@ -100,7 +100,7 @@ class TestSubtraction(BaseOperationTest):
     }
     invalid_test_cases = {}
 
-class TestMultiplication(BaseOperationTest):
+class TestMultiplicationOperation(BaseOperationTest):
 
     '''
     Test Multiplication operation
@@ -117,7 +117,7 @@ class TestMultiplication(BaseOperationTest):
     }
     invalid_test_cases = {}
 
-class TestDivision(BaseOperationTest):
+class TestDivisionOperation(BaseOperationTest):
 
     '''
     Test Division operation
@@ -135,7 +135,7 @@ class TestDivision(BaseOperationTest):
         'divide_by_zero': {'a': '5', 'b': '0', 'error': ValidationError, 'message': 'Division by zero is not allowed'},
     }
 
-class TestPower(BaseOperationTest):
+class TestPowerOperation(BaseOperationTest):
 
     '''
     Test Power operation
@@ -153,7 +153,7 @@ class TestPower(BaseOperationTest):
         'negative_exponent': {'a': '2', 'b': '-3', 'error': ValidationError, 'message': 'Negative exponents not supported'},
     }
 
-class TestRoot(BaseOperationTest):
+class TestRootOperation(BaseOperationTest):
 
     '''
     Test Root operation
@@ -171,7 +171,7 @@ class TestRoot(BaseOperationTest):
         'zero_root': {'a': '9', 'b': '0', 'error': ValidationError, 'message': 'Zero root is undefined'},
     }
 
-class TestModulus(BaseOperationTest):
+class TestModulusOperation(BaseOperationTest):
 
     '''
     Test Modulus operation
@@ -190,7 +190,7 @@ class TestModulus(BaseOperationTest):
     }
     invalid_test_cases = {}
 
-class TestIntegerDivision(BaseOperationTest):
+class TestIntegerDivisionOperation(BaseOperationTest):
 
     '''
     Test IntegerDivision operation
@@ -209,13 +209,13 @@ class TestIntegerDivision(BaseOperationTest):
     }
     invalid_test_cases = {}
 
-class TestPercentageCalculation(BaseOperationTest):
+class TestPercentageOperation(BaseOperationTest):
 
     '''
     Test PercentCalculation operation
     '''
 
-    operation_class = PercentageCalculation
+    operation_class = Percentage
     valid_test_cases = {
         'positive_integers': {'a': '10', 'b': '50', 'expected': '20'},
         'positive_floats': {'a': '4.5', 'b': '10', 'expected': '45'},
@@ -230,7 +230,7 @@ class TestPercentageCalculation(BaseOperationTest):
         'zero_denominator': {'a': '-5.5', 'b': '0', 'error': ValidationError, 'message': 'Cannot calculate percentages when b \\(denominator\\) is 0'},
     }
 
-class TestAbsoluteDifference(BaseOperationTest):
+class TestAbsoluteDifferenceOperation(BaseOperationTest):
 
     '''
     Test AbsoluteDifference operation
@@ -273,7 +273,7 @@ class TestOperationFactory:
             'root': Root,
             'modulus': Modulus,
             'int_divide': IntegerDivision,
-            'percent': PercentageCalculation,
+            'percent': Percentage,
             'abs_diff': AbsoluteDifference,
         }
 
