@@ -2,4 +2,5 @@
 .coverage.*
 *.log
 __pycache__/
+calculator_history.csv
 venv/
