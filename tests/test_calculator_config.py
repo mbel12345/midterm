@@ -154,6 +154,45 @@ def test_environment_overrides():
     assert config.history_dir == Path('./history_test').resolve()
     assert config.history_file == Path('./history_tmp/history_test.csv').resolve()
 
+def test_dotenv_override():
+
+    clear_env_vars('CALCULATOR_MAX_HISTORY_SIZE', 'CALCULATOR_AUTO_SAVE', 'CALCULATOR_PRECISION',
+                   'CALCULATOR_MAX_INPUT_VALUE', 'CALCULATOR_DEFAULT_ENCODING',
+                   'CALCULATOR_LOG_DIR', 'CALCULATOR_LOG_FILE', 'CALCULATOR_HISTORY_DIR', 'CALCULATOR_HISTORY_FILE')
+
+    env_file_name = f'{get_project_root()}/.env'
+
+    try:
+
+        with open(env_file_name, 'w') as env_file:
+            env_file.write('''
+                CALCULATOR_MAX_HISTORY_SIZE=200
+                CALCULATOR_AUTO_SAVE=false
+                CALCULATOR_PRECISION=4
+                CALCULATOR_MAX_INPUT_VALUE=1000
+                CALCULATOR_DEFAULT_ENCODING=ascii
+                CALCULATOR_LOG_DIR=./logs_dotenv
+                CALCULATOR_LOG_FILE=./logs_dotenv/log_test.log
+                CALCULATOR_HISTORY_DIR=./history_dotenv
+                CALCULATOR_HISTORY_FILE=./history_dotenv/history_test.csv
+            '''.strip().replace(' ', ''))
+
+        config = CalculatorConfig()
+
+        assert config.max_history_size == 200
+        assert config.auto_save is False
+        assert config.precision == 4
+        assert config.max_input_value == Decimal('1000')
+        assert config.default_encoding == 'ascii'
+        assert config.log_dir == Path('./logs_dotenv').resolve()
+        assert config.log_file == Path('./logs_dotenv/log_test.log').resolve()
+        assert config.history_dir == Path('./history_dotenv').resolve()
+        assert config.history_file == Path('./history_dotenv/history_test.csv').resolve()
+
+    finally:
+
+        os.remove(env_file_name)
+
 def test_default_fallback():
 
     # Test that vars fall back if not defined in os.environ

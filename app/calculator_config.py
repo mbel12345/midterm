@@ -9,8 +9,6 @@ from typing import Optional
 
 from app.exceptions import ConfigurationError
 
-load_dotenv()
-
 def get_project_root() -> Path:
 
     # Get the project root directory
@@ -37,6 +35,8 @@ class CalculatorConfig:
     ):
 
         # Load vars from either __init__ parameters or environment vars
+
+        load_dotenv()
 
         project_root = get_project_root()
 
