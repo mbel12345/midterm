@@ -1,6 +1,7 @@
 from decimal import Decimal
 import logging
 
+from app.calculation import Calculation
 from app.calculator import Calculator
 from app.exceptions import OperationError
 from app.exceptions import ValidationError
@@ -117,7 +118,7 @@ def calculator_repl():
                         # Perform the calculation
                         result = calc.perform_operation(a, b)
 
-                        print(f'\nResult: {result}')
+                        print(f'\nResult: {Calculation.format_result(result)}')
 
                     except (ValidationError, OperationError) as e:
                         print(f'Error: {e}')

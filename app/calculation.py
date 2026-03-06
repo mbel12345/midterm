@@ -1,5 +1,7 @@
 import datetime
 import logging
+import numbers
+import re
 
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
@@ -76,7 +78,7 @@ class Calculation:
             'operation': self.operation,
             'operand1': str(self.operand1),
             'operand2': str(self.operand2),
-            'result': str(self.result),
+            'result': Calculation.format_result(self.result),
             'timestamp': self.timestamp.isoformat(),
         }
 
@@ -139,19 +141,31 @@ class Calculation:
             self.result == other.result
         )
 
-    def format_result(self, precision: int = 10) -> str:
+    # Static method since this method needs to be called against str objects directly when no Calculation object is being used, like in calculator_repl.py.
+    @staticmethod
+    def format_result(result, precision: int = 10) -> str:
 
         # Format the calculation for the given precision
 
         try:
 
-            return str(
-                self.result.normalize().quantize(
+            if isinstance(result, numbers.Number):
+                result = Decimal(result)
+
+            result = str(
+                result.normalize().quantize(
                     Decimal('0.' + '0' * precision)
                 ).normalize()
             )
 
+            if 'E' in result:
+                result = format(Decimal(result), 'f')
+
+            result = re.sub('(.*\..*)0+$', '\\1', result) # Remove trailing zeros
+
+            return result
+
         except InvalidOperation:
 
-            return str(self.result)
+            return str(result)
 

@@ -25,7 +25,7 @@ def test_memento_to_dict():
                 'operation': 'Percentage',
                 'operand1': '3',
                 'operand2': '5',
-                'result': '60.0',
+                'result': '60',
             },
             {
                 'operation': 'AbsoluteDifference',

@@ -375,7 +375,7 @@ def test_show_history(calculator):
 
     assert calculator.show_history() == [
         'AbsoluteDifference(6, 8) = 2',
-        'Percentage(42, 84) = 50.0',
+        'Percentage(42, 84) = 50',
     ]
 
 @patch('app.calculator.logging.info')
