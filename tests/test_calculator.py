@@ -170,7 +170,7 @@ def test_calculator_integer_division(calculator):
 
 def test_calculator_percentage(calculator):
 
-    # Do an addition operation
+    # Do a percentage operation
 
     operation = OperationFactory.create_operation('percent')
     calculator.set_operation(operation)
@@ -179,7 +179,7 @@ def test_calculator_percentage(calculator):
 
 def test_calculator_absolute_difference(calculator):
 
-    # Do an addition operation
+    # Do an absolute difference operation
 
     operation = OperationFactory.create_operation('abs_diff')
     calculator.set_operation(operation)
