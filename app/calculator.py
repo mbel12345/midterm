@@ -211,7 +211,7 @@ class Calculator:
 
         except Exception as e:
 
-            logging.error('Failed to load history: {e}')
+            logging.error(f'Failed to load history: {e}')
             raise OperationError(f'Failed to load history: {e}')
 
     def get_history_dataframe(self) -> pd.DataFrame:
