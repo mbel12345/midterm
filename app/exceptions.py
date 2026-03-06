@@ -1,4 +1,4 @@
-class CalculationError(Exception):
+class CalculatorError(Exception):
 
     '''
     Base class for all other custom errors for the calculator
@@ -6,7 +6,7 @@ class CalculationError(Exception):
 
     pass
 
-class ConfigurationError(CalculationError):
+class ConfigurationError(CalculatorError):
 
     '''
     Raised when there is an invalid config setting
@@ -14,7 +14,7 @@ class ConfigurationError(CalculationError):
 
     pass
 
-class OperationError(CalculationError):
+class OperationError(CalculatorError):
 
     '''
     Raised when a calculation operation fails
@@ -22,7 +22,7 @@ class OperationError(CalculationError):
 
     pass
 
-class ValidationError(CalculationError):
+class ValidationError(CalculatorError):
 
     '''
     Raised when input validation fails
