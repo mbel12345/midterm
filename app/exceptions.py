@@ -6,6 +6,14 @@ class CalculationError(Exception):
 
     pass
 
+class ConfigurationError(CalculationError):
+
+    '''
+    Raised when there is an invalid config setting
+    '''
+
+    pass
+
 class OperationError(CalculationError):
 
     '''
