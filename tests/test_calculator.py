@@ -1,4 +1,5 @@
 import datetime
+import os
 import pandas as pd
 import pandas.testing as pdt
 import pytest
@@ -273,6 +274,67 @@ def test_calculator_fail_history_load(log_mock, monkeypatch):
     monkeypatch.setattr(Calculator, 'load_history', bad_load_history)
     Calculator()
     log_mock.assert_any_call('Could not load existing history: Force fail')
+
+@patch('app.calculator.logging.info')
+def test_calculator_history_file_missing(log_mock):
+
+    history_file = Path('./history/history_missing.csv')
+
+    try:
+
+        if os.path.exists(history_file):
+            os.remove(history_file)
+
+        os.environ['CALCULATOR_HISTORY_FILE'] = str(history_file)
+        Calculator()
+        log_mock.assert_any_call('No history file found - starting with empty history')
+
+    finally:
+
+        os.environ.pop('CALCULATOR_HISTORY_FILE')
+        if os.path.exists(history_file):
+            os.remove(history_file)
+
+@patch('app.calculator.logging.warning')
+def test_calculator_history_file_empty(warn_mock):
+
+    history_file = Path('./history/history_empty.csv')
+
+    try:
+
+        with open(str(history_file), 'w') as out_f:
+            out_f.write('')
+
+        os.environ['CALCULATOR_HISTORY_FILE'] = str(history_file)
+        Calculator()
+        warn_mock.assert_any_call('Could not load existing history: Failed to load history: No columns to parse from file')
+
+    finally:
+
+        os.environ.pop('CALCULATOR_HISTORY_FILE')
+        if os.path.exists(history_file):
+            os.remove(history_file)
+
+@patch('app.calculator.logging.warning')
+def test_calculator_history_file_malformed(warn_mock):
+
+    history_file = Path('./history/history_malformed.csv')
+
+    try:
+
+        with open(str(history_file), 'w') as out_f:
+            out_f.write('fake_header_1,fake_header_2\n')
+            out_f.write('fake_value_1,fake_value_2\n')
+
+        os.environ['CALCULATOR_HISTORY_FILE'] = str(history_file)
+        Calculator()
+        warn_mock.assert_any_call("Could not load existing history: Failed to load history: 'operation'")
+
+    finally:
+
+        os.environ.pop('CALCULATOR_HISTORY_FILE')
+        if os.path.exists(history_file):
+            os.remove(history_file)
 
 def test_calculator_history_too_big(calculator):
 
