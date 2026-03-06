@@ -264,8 +264,19 @@ def test_format_result():
     # Test using the right precision in decimal numbers
 
     calc = Calculation(operation='Division', operand1=Decimal('1'), operand2=Decimal('3'))
-    assert calc.format_result(precision=2) == '0.33'
-    assert calc.format_result(precision=10) == '0.3333333333'
+    assert Calculation.format_result(result=calc.result, precision=2) == '0.33'
+    assert Calculation.format_result(result=calc.result, precision=10) == '0.3333333333'
+
+def test_format_result_trailing_zeros():
+
+    calc = Calculation(operation='Percentage', operand1=Decimal('2'), operand2=Decimal('5'))
+    assert Calculation.format_result(calc.result) == '40'
+
+def test_format_result_float():
+
+    calc = Calculation(operation='Addition', operand1=Decimal('0'), operand2=Decimal('0'))
+    calc.result = 45.5
+    assert Calculation.format_result(calc.result) == '45.5'
 
 def test_equality():
 
@@ -353,5 +364,5 @@ def test_format_result_error(monkeypatch):
 
     calc = Calculation(operation='Addition', operand1=Decimal('5'), operand2=Decimal('2'))
     calc.result = BadResult('34')
-    assert calc.format_result() == '34'
+    assert Calculation.format_result(calc.result) == '34'
 

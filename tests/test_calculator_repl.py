@@ -36,7 +36,6 @@ def calculator():
 
             yield calc
 
-
 @patch('builtins.input', side_effect=['exit'])
 @patch('builtins.print')
 def test_repl_exit(mock_print, mock_input):
@@ -66,13 +65,13 @@ def test_repl_addition(mock_print, mock_input):
     calculator_repl()
     mock_print.assert_any_call('\nResult: 5')
 
-@patch('builtins.input', side_effect=['subtract', '2', '3', 'exit'])
+@patch('builtins.input', side_effect=['subtract', '2', '3.4', 'exit'])
 @patch('builtins.print')
 def test_repl_subtraction(mock_print, mock_input):
 
     # Test REPL Subtraction
     calculator_repl()
-    mock_print.assert_any_call('\nResult: -1')
+    mock_print.assert_any_call('\nResult: -1.4')
 
 @patch('builtins.input', side_effect=['multiply', '2', '3', 'exit'])
 @patch('builtins.print')
@@ -112,7 +111,7 @@ def test_repl_root(mock_print, mock_input):
 
     # Test REPL Root
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 2.000000000000000000000000000') # TODO: Trim the zeros
+    mock_print.assert_any_call('\nResult: 2')
 
 @patch('builtins.input', side_effect=['modulus', '7', '3', 'exit'])
 @patch('builtins.print')
@@ -136,7 +135,7 @@ def test_repl_percentage(mock_print, mock_input):
 
     # Test REPL Percentage
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 40.0') # TODO: Trim the zeros
+    mock_print.assert_any_call('\nResult: 40')
 
 
 @patch('builtins.input', side_effect=['abs_diff', '2', '3', 'exit'])

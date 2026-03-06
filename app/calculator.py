@@ -234,7 +234,7 @@ class Calculator:
         # Get formatted calculation history
 
         return [
-            f'{calc.operation}({calc.operand1}, {calc.operand2}) = {calc.result}'
+            f'{calc.operation}({calc.operand1}, {calc.operand2}) = {Calculation.format_result(calc.result)}'
             for calc in self.history
         ]
 
