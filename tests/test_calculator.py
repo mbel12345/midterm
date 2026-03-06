@@ -87,7 +87,7 @@ def test_set_operation(calculator):
     calculator.set_operation(operation)
     assert calculator.operation_strategy == operation
 
-def test_perform_operation_addition(calculator):
+def test_calculator_addition(calculator):
 
     # Do an addition operation
 
@@ -95,6 +95,96 @@ def test_perform_operation_addition(calculator):
     calculator.set_operation(operation)
     result = calculator.perform_operation(2, 3)
     assert result == Decimal('5')
+
+def test_calculator_subtraction(calculator):
+
+    # Do a subtraction operation
+
+    operation = OperationFactory.create_operation('subtract')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(2, 3)
+    assert result == Decimal('-1')
+
+def test_calculator_multiplication(calculator):
+
+    # Do a multiplication operation
+
+    operation = OperationFactory.create_operation('multiply')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(2, 3)
+    assert result == Decimal('6')
+
+def test_calculator_division(calculator):
+
+    # Do a division operation
+
+    operation = OperationFactory.create_operation('divide')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(5, 2)
+    assert result == Decimal('2.5')
+
+def test_calculator_division_by_zero(calculator):
+
+    # Handle division by zero error
+
+    with pytest.raises(ValidationError, match='Division by zero is not allowed'):
+        operation = OperationFactory.create_operation('divide')
+        calculator.set_operation(operation)
+        result = calculator.perform_operation(2, 0)
+
+def test_calculator_power(calculator):
+
+    # Do a power operation
+
+    operation = OperationFactory.create_operation('power')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(2, 3)
+    assert result == Decimal('8')
+
+def test_calculator_root(calculator):
+
+    # Do a root operation
+
+    operation = OperationFactory.create_operation('root')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(9, 2)
+    assert result == Decimal('3')
+
+def test_calculator_modulus(calculator):
+
+    # Do a modulus operation
+
+    operation = OperationFactory.create_operation('modulus')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(7, 3)
+    assert result == Decimal('1')
+
+def test_calculator_integer_division(calculator):
+
+    # Do an integer division operation
+
+    operation = OperationFactory.create_operation('int_divide')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(7, 3)
+    assert result == Decimal('2')
+
+def test_calculator_percentage(calculator):
+
+    # Do an addition operation
+
+    operation = OperationFactory.create_operation('percent')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(2, 5)
+    assert result == Decimal('40')
+
+def test_calculator_absolute_difference(calculator):
+
+    # Do an addition operation
+
+    operation = OperationFactory.create_operation('abs_diff')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(2, 3)
+    assert result == Decimal('1')
 
 def test_perform_operation_validation_error(calculator):
 
