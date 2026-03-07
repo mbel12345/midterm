@@ -1,4 +1,5 @@
-from decimal import Decimal
+from colorama import Fore
+from colorama import init as colorama_init
 
 from app.calculation import Calculation
 from app.calculator import Calculator
@@ -18,98 +19,100 @@ def calculator_repl():
 
     try:
 
+        colorama_init()
+
         calc = Calculator()
 
         # Register observers
         calc.add_observer(LoggingObserver())
         calc.add_observer(AutoSaveObserver(calc))
 
-        print('Calculator started. Type \'help\' for commands')
+        print(Fore.MAGENTA + 'Calculator started. Type \'help\' for commands')
 
         while True:
 
             try:
 
-                command = input('\nEnter command: ').lower().strip()
+                command = input(Fore.LIGHTBLUE_EX + '\nEnter command: ').lower().strip()
 
                 if command == 'help':
                     # Display allowed commands
                     # Operations taken from the Decorator registration in OperationFactory
-                    print('\nAvailable commands:')
-                    print(f'  {', '.join(OperationFactory._operations.keys())} - Perform calculations')
-                    print(f'  history - Show calculation history')
-                    print(f'  clear - Clear calculation history')
-                    print(f'  undo - Undo the last calculation')
-                    print(f'  redo - Redo the last undone calculation')
-                    print(f'  save - Save calculation history to file')
-                    print(f'  load - Load calculation history from file')
-                    print(f'  exit - Exit the calculator')
+                    print(Fore.CYAN + '\nAvailable commands:')
+                    print(f'{Fore.CYAN}  {', '.join(OperationFactory._operations.keys())} - Perform calculations')
+                    print(f'{Fore.CYAN}  history - Show calculation history')
+                    print(f'{Fore.CYAN}  clear - Clear calculation history')
+                    print(f'{Fore.CYAN}  undo - Undo the last calculation')
+                    print(f'{Fore.CYAN}  redo - Redo the last undone calculation')
+                    print(f'{Fore.CYAN}  save - Save calculation history to file')
+                    print(f'{Fore.CYAN}  load - Load calculation history from file')
+                    print(f'{Fore.CYAN}  exit - Exit the calculator')
                     continue
 
                 if command == 'exit':
                     try:
                         calc.save_history()
-                        print('History saved successfully')
+                        print(Fore.GREEN + 'History saved successfully')
                     except Exception as e:
-                        print(f'Warning: Could not save history: {e}')
-                    print('Goodbye!')
+                        print(f'{Fore.YELLOW}Warning: Could not save history: {e}')
+                    print(Fore.MAGENTA + 'Goodbye!')
                     break
 
                 if command == 'history':
                     history = calc.show_history()
                     if not history:
-                        print('No calculations in history')
+                        print(Fore.YELLOW + 'No calculations in history')
                     else:
-                        print('\nCalculation History:')
+                        print(Fore.CYAN + '\nCalculation History:')
                         for i, entry in enumerate(history, 1):
-                            print(f'{i}. {entry}')
+                            print(f'{Fore.CYAN}{i}. {entry}')
                     continue
 
                 if command == 'clear':
                     calc.clear_history()
-                    print('History cleared')
+                    print(Fore.GREEN + 'History cleared')
                     continue
 
                 if command == 'undo':
                     if calc.undo():
-                        print('Operation undone')
+                        print(Fore.GREEN + 'Operation undone')
                     else:
-                        print('Nothing to undo')
+                        print(Fore.YELLOW + 'Nothing to undo')
                     continue
 
                 if command == 'redo':
                     if calc.redo():
-                        print('Operation redone')
+                        print(Fore.GREEN + 'Operation redone')
                     else:
-                        print('Nothing to redo')
+                        print(Fore.YELLOW + 'Nothing to redo')
                     continue
 
                 if command == 'save':
                     try:
                         calc.save_history()
-                        print('History saved successfully')
+                        print(Fore.GREEN + 'History saved successfully')
                     except Exception as e:
-                        print(f'Error saving history: {e}')
+                        print(f'{Fore.RED}Error saving history: {e}')
                     continue
 
                 if command == 'load':
                     try:
                         calc.load_history()
-                        print('History loaded successfully')
+                        print(Fore.GREEN + 'History loaded successfully')
                     except Exception as e:
-                        print(f'Error loading history: {e}')
+                        print(f'{Fore.RED}Error loading history: {e}')
                     continue
 
                 if command in OperationFactory._operations:
                     try:
-                        print("\nEnter numbers (or 'cancel'; to abort):")
+                        print(Fore.LIGHTBLUE_EX + "\nEnter numbers (or 'cancel'; to abort):")
                         a = input('First number: ')
                         if a.lower() == 'cancel':
-                            print('Operation cancelled')
+                            print(Fore.YELLOW + 'Operation cancelled')
                             continue
                         b = input('Second number: ')
                         if b.lower() == 'cancel':
-                            print('Operation cancelled')
+                            print(Fore.YELLOW + 'Operation cancelled')
                             continue
 
                         # Create the appropriate operation using a Factory
@@ -119,31 +122,31 @@ def calculator_repl():
                         # Perform the calculation
                         result = calc.perform_operation(a, b)
 
-                        print(f'\nResult: {Calculation.format_result(result)}')
+                        print(f'{Fore.GREEN}\nResult: {Calculation.format_result(result)}')
 
                     except (ValidationError, OperationError) as e:
-                        print(f'Error: {e}')
+                        print(f'{Fore.RED}Error: {e}')
 
                     except Exception as e:
-                        print(f'Unexpected error: {e}')
+                        print(f'{Fore.RED}Unexpected error: {e}')
 
                     continue
 
-                print(f"Unknown command: '{command}'. Type 'help' for available commands.")
+                print(f"{Fore.RED}Unknown command: '{command}'. Type 'help' for available commands.")
 
             except KeyboardInterrupt:
-                print('\nOperation cancelled')
+                print(Fore.YELLOW + '\nOperation cancelled')
 
             except EOFError:
-                print('\nInput terminated. Exiting...')
+                print(Fore.YELLOW + '\nInput terminated. Exiting...')
 
             except Exception as e:
-                print(f'Error: {e}')
+                print(f'{Fore.RED}Error: {e}')
                 continue
 
     except Exception as e:
 
         # Fatal errors
 
-        print(f'Fatal error: {e}')
-        Logger.error(f'Fatal error in calculator REPL: {e}')
+        print(f'{Fore.RED}Fatal error: {e}')
+        Logger.error(f'{Fore.RED}Fatal error in calculator REPL: {e}')

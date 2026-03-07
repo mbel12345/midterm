@@ -1,6 +1,8 @@
 import logging
 import os
 
+from colorama import Fore
+from colorama import init as colorama_init
 from pathlib import Path
 
 class Logger:
@@ -11,6 +13,8 @@ class Logger:
         # Configure Calculator logging
 
         try:
+
+            colorama_init()
 
             # Make sure log dir exists
             os.makedirs(log_file.parent, exist_ok=True)
@@ -27,7 +31,7 @@ class Logger:
 
         except Exception as e:
 
-            print(f'Error setting up logging: {e}')
+            print(f'{Fore.RED}Error setting up logging: {e}')
             raise
 
     @staticmethod
