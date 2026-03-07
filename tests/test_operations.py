@@ -298,22 +298,42 @@ class TestOperationFactory:
 
         # Test registering a new valid operation
 
+        @OperationFactory.register_operation('some_op')
         class SomeOperation(Operation):
             def execute(self, a: Decimal, b: Decimal) -> Decimal:
                 return a
             def validate_operands(self, a, b):
                 pass
 
-        OperationFactory.register_operation('new_op', SomeOperation)
-        operation = OperationFactory.create_operation('new_op')
+        operation = OperationFactory.create_operation('some_op')
         assert isinstance(operation, SomeOperation)
 
     def test_register_invalid_operation(self):
 
         # Test registering an invalid operation, verify an error is raised
 
-        class BadOperation:
-            pass
+        with pytest.raises(TypeError, match='Class must inherit from Operation'):
 
-        with pytest.raises(TypeError, match='Operation class must inherit'):
-            OperationFactory.register_operation('invalid', BadOperation)
+            @OperationFactory.register_operation('bad_op')
+            class BadOperation:
+                pass
+
+    def test_register_twice(self):
+
+        # Test registering a new valid operation
+
+        @OperationFactory.register_operation('register_twice')
+        class SomeOperation(Operation):
+            def execute(self, a: Decimal, b: Decimal) -> Decimal:
+                return a
+            def validate_operands(self, a, b):
+                pass
+
+        def create_duplicate_op():
+            @OperationFactory.register_operation('register_twice')
+            class SomeOperation2(Operation):
+                def execute(self, a: Decimal, b: Decimal) -> Decimal: return a
+                def validate_operands(self, a, b): pass
+
+        with pytest.raises(ValueError, match="Operation type 'register_twice' is already registered."):
+            create_duplicate_op()

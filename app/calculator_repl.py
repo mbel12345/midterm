@@ -34,15 +34,16 @@ def calculator_repl():
 
                 if command == 'help':
                     # Display allowed commands
-                    print("\nAvailable commands:")
-                    print("  add, subtract, multiply, divide, power, root - Perform calculations")
-                    print("  history - Show calculation history")
-                    print("  clear - Clear calculation history")
-                    print("  undo - Undo the last calculation")
-                    print("  redo - Redo the last undone calculation")
-                    print("  save - Save calculation history to file")
-                    print("  load - Load calculation history from file")
-                    print("  exit - Exit the calculator")
+                    # Operations taken from the Decorator registration in OperationFactory
+                    print('\nAvailable commands:')
+                    print(f'  {', '.join(OperationFactory._operations.keys())} - Perform calculations')
+                    print(f'  history - Show calculation history')
+                    print(f'  clear - Clear calculation history')
+                    print(f'  undo - Undo the last calculation')
+                    print(f'  redo - Redo the last undone calculation')
+                    print(f'  save - Save calculation history to file')
+                    print(f'  load - Load calculation history from file')
+                    print(f'  exit - Exit the calculator')
                     continue
 
                 if command == 'exit':
@@ -99,7 +100,7 @@ def calculator_repl():
                         print(f'Error loading history: {e}')
                     continue
 
-                if command in ['add', 'subtract', 'multiply', 'divide', 'power', 'root', 'modulus', 'int_divide', 'percent', 'abs_diff']:
+                if command in OperationFactory._operations:
                     try:
                         print("\nEnter numbers (or 'cancel'; to abort):")
                         a = input('First number: ')
