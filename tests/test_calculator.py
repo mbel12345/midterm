@@ -263,7 +263,7 @@ def test_clear_history(calculator):
 
 # Additional cases beyond ones in instructor example
 
-@patch('app.calculator.logging.warning')
+@patch('app.logger.logging.warning')
 def test_calculator_fail_history_load(log_mock, monkeypatch):
 
     # Simulate error in loading history
@@ -275,7 +275,7 @@ def test_calculator_fail_history_load(log_mock, monkeypatch):
     Calculator()
     log_mock.assert_any_call('Could not load existing history: Force fail')
 
-@patch('app.calculator.logging.info')
+@patch('app.logger.logging.info')
 def test_calculator_history_file_missing(log_mock):
 
     history_file = Path('./history/history_missing.csv')
@@ -295,7 +295,7 @@ def test_calculator_history_file_missing(log_mock):
         if os.path.exists(history_file):
             os.remove(history_file)
 
-@patch('app.calculator.logging.warning')
+@patch('app.logger.logging.warning')
 def test_calculator_history_file_empty(warn_mock):
 
     history_file = Path('./history/history_empty.csv')
@@ -315,7 +315,7 @@ def test_calculator_history_file_empty(warn_mock):
         if os.path.exists(history_file):
             os.remove(history_file)
 
-@patch('app.calculator.logging.warning')
+@patch('app.logger.logging.warning')
 def test_calculator_history_file_malformed(warn_mock):
 
     history_file = Path('./history/history_malformed.csv')
@@ -440,7 +440,7 @@ def test_show_history(calculator):
         'Percentage(42, 84) = 50',
     ]
 
-@patch('app.calculator.logging.info')
+@patch('app.logger.logging.info')
 def test_load_empty_history(log_mock, calculator):
 
     with open(calculator.config.history_file, 'w') as out_f:

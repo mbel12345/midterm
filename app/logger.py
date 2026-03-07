@@ -3,7 +3,7 @@ import os
 
 from pathlib import Path
 
-class CustomLogger:
+class Logger:
 
     @staticmethod
     def setup_logging(log_file: Path) -> None:
@@ -23,9 +23,24 @@ class CustomLogger:
                 format='%(asctime)s - %(levelname)s - %(message)s',
                 force=True,
             )
-            logging.info(f'Logging initialized at: {log_file}')
+            Logger.info(f'Logging initialized at: {log_file}')
 
         except Exception as e:
 
             print(f'Error setting up logging: {e}')
             raise
+
+    @staticmethod
+    def info(message):
+
+        logging.info(message)
+
+    @staticmethod
+    def warning(message):
+
+        logging.warning(message)
+
+    @staticmethod
+    def error(message):
+
+        logging.error(message)
