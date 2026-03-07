@@ -72,7 +72,7 @@ def test_logger_warning():
 
 def test_logger_error():
 
-    # Test Logger.warning()
+    # Test Logger.error()
 
     log_file = Path('./test_logger/test_logger_error.log')
     if os.path.exists(log_file):
