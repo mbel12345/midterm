@@ -1,5 +1,4 @@
 import datetime
-import logging
 import numbers
 import re
 
@@ -9,6 +8,7 @@ from typing import Any, Dict
 
 from app.exceptions import OperationError
 from app.exceptions import ValidationError
+from app.logger import Logger
 from app.operations import AbsoluteDifference
 from app.operations import Addition
 from app.operations import Division
@@ -99,7 +99,7 @@ class Calculation:
 
             saved_result = Decimal(data['result'])
             if calc.result != saved_result:
-                logging.warning(
+                Logger.warning(
                     f'Loaded calculation result {saved_result} '
                     f'differs from computed result {calc.result}'
                 )
