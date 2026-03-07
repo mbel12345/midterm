@@ -1,5 +1,6 @@
 import pytest
 
+from colorama import Fore
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch, PropertyMock
@@ -45,8 +46,9 @@ def test_repl_exit(mock_print, mock_input):
     with patch('app.calculator.Calculator.save_history') as mock_save_history:
         calculator_repl()
         mock_save_history.assert_called_once()
-        mock_print.assert_any_call('History saved successfully')
-        mock_print.assert_any_call('Goodbye!')
+        actual = [call.args[0] for call in mock_print.call_args_list]
+        assert Fore.GREEN + 'History saved successfully' in actual
+        assert Fore.MAGENTA + 'Goodbye!' in actual
 
 @patch('builtins.input', side_effect=['help', 'exit'])
 @patch('builtins.print')
@@ -79,7 +81,7 @@ def test_repl_addition(mock_print, mock_input):
 
     # Test REPL Addtion
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 5')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 5')
 
 @patch('builtins.input', side_effect=['subtract', '2', '3.4', 'exit'])
 @patch('builtins.print')
@@ -87,7 +89,7 @@ def test_repl_subtraction(mock_print, mock_input):
 
     # Test REPL Subtraction
     calculator_repl()
-    mock_print.assert_any_call('\nResult: -1.4')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: -1.4')
 
 @patch('builtins.input', side_effect=['multiply', '2', '3', 'exit'])
 @patch('builtins.print')
@@ -95,7 +97,7 @@ def test_repl_multiplication(mock_print, mock_input):
 
     # Test REPL Multiplication
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 6')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 6')
 
 @patch('builtins.input', side_effect=['divide', '2', '5', 'exit'])
 @patch('builtins.print')
@@ -103,7 +105,7 @@ def test_repl_division(mock_print, mock_input):
 
     # Test REPL Division
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 0.4')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 0.4')
 
 @patch('builtins.input', side_effect=['divide', '2', '0', 'exit'])
 @patch('builtins.print')
@@ -111,7 +113,7 @@ def test_repl_division_by_zero(mock_print, mock_input):
 
     # Test REPL Division by 0
     calculator_repl()
-    mock_print.assert_any_call('Error: Division by zero is not allowed')
+    mock_print.assert_any_call(Fore.RED + 'Error: Division by zero is not allowed')
 
 @patch('builtins.input', side_effect=['power', '2', '3', 'exit'])
 @patch('builtins.print')
@@ -119,7 +121,7 @@ def test_repl_power(mock_print, mock_input):
 
     # Test REPL Power
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 8')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 8')
 
 @patch('builtins.input', side_effect=['root', '8', '3', 'exit'])
 @patch('builtins.print')
@@ -127,7 +129,7 @@ def test_repl_root(mock_print, mock_input):
 
     # Test REPL Root
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 2')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 2')
 
 @patch('builtins.input', side_effect=['modulus', '7', '3', 'exit'])
 @patch('builtins.print')
@@ -135,7 +137,7 @@ def test_repl_modulus(mock_print, mock_input):
 
     # Test REPL Modulus
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 1')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 1')
 
 @patch('builtins.input', side_effect=['int_divide', '11', '3', 'exit'])
 @patch('builtins.print')
@@ -143,7 +145,7 @@ def test_repl_integer_division(mock_print, mock_input):
 
     # Test REPL Integer Division
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 3')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 3')
 
 @patch('builtins.input', side_effect=['percent', '2', '5', 'exit'])
 @patch('builtins.print')
@@ -151,7 +153,7 @@ def test_repl_percentage(mock_print, mock_input):
 
     # Test REPL Percentage
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 40')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 40')
 
 
 @patch('builtins.input', side_effect=['abs_diff', '2', '3', 'exit'])
@@ -160,15 +162,8 @@ def test_repl_absolute_difference(mock_print, mock_input):
 
     # Test REPL Absolute Difference
     calculator_repl()
-    mock_print.assert_any_call('\nResult: 1')
+    mock_print.assert_any_call(Fore.GREEN + '\nResult: 1')
 
-@patch('builtins.input', side_effect=['add', '2', '3', 'exit'])
-@patch('builtins.print')
-def test_repl_addition(mock_print, mock_input):
-
-    # Test REPL Addtion
-    calculator_repl()
-    mock_print.assert_any_call('\nResult: 5')
 @patch('builtins.input', side_effect=['exit'])
 @patch('builtins.print')
 def test_repl_fail_save_history(mock_print, mock_input, monkeypatch):
@@ -180,8 +175,8 @@ def test_repl_fail_save_history(mock_print, mock_input, monkeypatch):
 
     monkeypatch.setattr(Calculator, 'save_history', bad_save_history)
     calculator_repl()
-    mock_print.assert_any_call('Calculator started. Type \'help\' for commands')
-    mock_print.assert_any_call('Warning: Could not save history: Force fail')
+    mock_print.assert_any_call(Fore.MAGENTA + 'Calculator started. Type \'help\' for commands')
+    mock_print.assert_any_call(Fore.YELLOW + 'Warning: Could not save history: Force fail')
 
 @patch('builtins.input', side_effect=['clear', 'add', '3', '4', 'subtract', '6', '2', 'history', 'exit'])
 @patch('builtins.print')
@@ -190,8 +185,8 @@ def test_repl_history_with_data(mock_print, mock_input):
     # Show history after performing operations
 
     calculator_repl()
-    mock_print.assert_any_call('1. Addition(3, 4) = 7')
-    mock_print.assert_any_call('2. Subtraction(6, 2) = 4')
+    mock_print.assert_any_call(Fore.CYAN + '1. Addition(3, 4) = 7')
+    mock_print.assert_any_call(Fore.CYAN + '2. Subtraction(6, 2) = 4')
 
 @patch('builtins.input', side_effect=['clear', 'history', 'exit'])
 @patch('builtins.print')
@@ -200,7 +195,7 @@ def test_repl_history_empty(mock_print, mock_input):
     # Show history with no data
 
     calculator_repl()
-    mock_print.assert_any_call('No calculations in history')
+    mock_print.assert_any_call(Fore.YELLOW + 'No calculations in history')
 
 @patch('builtins.input', side_effect=['clear', 'add', '3', '6', 'undo', 'exit'])
 @patch('builtins.print')
@@ -209,7 +204,7 @@ def test_repl_undo_with_data(mock_print, mock_input, monkeypatch):
     # Do undo with data
 
     calculator_repl()
-    mock_print.assert_any_call('Operation undone')
+    mock_print.assert_any_call(Fore.GREEN + 'Operation undone')
 
 @patch('builtins.input', side_effect=['clear', 'undo', 'exit'])
 @patch('builtins.print')
@@ -218,7 +213,7 @@ def test_repl_undo_empty(mock_print, mock_input, monkeypatch):
     # Do undo when there is no history
 
     calculator_repl()
-    mock_print.assert_any_call('Nothing to undo')
+    mock_print.assert_any_call(Fore.YELLOW + 'Nothing to undo')
 
 @patch('builtins.input', side_effect=['clear', 'add', '3', '6', 'undo', 'redo', 'exit'])
 @patch('builtins.print')
@@ -227,7 +222,7 @@ def test_repl_redo_with_data(mock_print, mock_input, monkeypatch):
     # Do redo with data
 
     calculator_repl()
-    mock_print.assert_any_call('Operation redone')
+    mock_print.assert_any_call(Fore.GREEN + 'Operation redone')
 
 @patch('builtins.input', side_effect=['clear', 'redo', 'exit'])
 @patch('builtins.print')
@@ -236,7 +231,7 @@ def test_repl_redo_empty(mock_print, mock_input, monkeypatch):
     # Do redo when there is no history
 
     calculator_repl()
-    mock_print.assert_any_call('Nothing to redo')
+    mock_print.assert_any_call(Fore.YELLOW + 'Nothing to redo')
 
 @patch('builtins.input', side_effect=['clear', 'add', '3', '6', 'save', 'exit'])
 @patch('builtins.print')
@@ -245,7 +240,7 @@ def test_repl_save(mock_print, mock_input, monkeypatch):
     # Do redo with data
 
     calculator_repl()
-    mock_print.assert_any_call('History saved successfully')
+    mock_print.assert_any_call(Fore.GREEN + 'History saved successfully')
 
 
 @patch('builtins.input', side_effect=['clear', 'save', 'exit'])
@@ -259,7 +254,7 @@ def test_repl_fail_save(mock_print, mock_input, monkeypatch):
 
     monkeypatch.setattr(Calculator, 'save_history', bad_save)
     calculator_repl()
-    mock_print.assert_any_call('Error saving history: Force fail')
+    mock_print.assert_any_call(Fore.RED + 'Error saving history: Force fail')
 
 @patch('builtins.input', side_effect=['clear', 'load', 'exit'])
 @patch('builtins.print')
@@ -268,7 +263,7 @@ def test_repl_load(mock_print, mock_input, monkeypatch):
     # Do redo with load
 
     calculator_repl()
-    mock_print.assert_any_call('History loaded successfully')
+    mock_print.assert_any_call(Fore.GREEN + 'History loaded successfully')
 
 @patch('builtins.input', side_effect=['clear', 'load', 'exit'])
 @patch('builtins.print')
@@ -281,7 +276,7 @@ def test_repl_fail_load(mock_print, mock_input, monkeypatch):
 
     monkeypatch.setattr(Calculator, 'load_history', bad_load)
     calculator_repl()
-    mock_print.assert_any_call('Error loading history: Force fail')
+    mock_print.assert_any_call(Fore.RED + 'Error loading history: Force fail')
 
 @patch('builtins.input', side_effect=['clear', 'add', 'cancel', 'exit'])
 @patch('builtins.print')
@@ -290,7 +285,7 @@ def test_repl_cancel_first(mock_print, mock_input, monkeypatch):
     # Do cancel with first number
 
     calculator_repl()
-    mock_print.assert_any_call('Operation cancelled')
+    mock_print.assert_any_call(Fore.YELLOW + 'Operation cancelled')
 
 @patch('builtins.input', side_effect=['clear', 'add', '3', 'cancel', 'exit'])
 @patch('builtins.print')
@@ -299,7 +294,7 @@ def test_repl_cancel_second(mock_print, mock_input, monkeypatch):
     # Do cancel with second number
 
     calculator_repl()
-    mock_print.assert_any_call('Operation cancelled')
+    mock_print.assert_any_call(Fore.YELLOW + 'Operation cancelled')
 
 @patch('builtins.input', side_effect=['clear', 'add', '3.5', '2.1', 'exit'])
 @patch('builtins.print')
@@ -320,7 +315,7 @@ def test_replic_invalid_operation(mock_print, mock_input, monkeypatch):
 
     monkeypatch.setattr(Calculator, 'perform_operation', bad_operation)
     calculator_repl()
-    mock_print.assert_any_call('Error: Force fail')
+    mock_print.assert_any_call(Fore.RED + 'Error: Force fail')
 
 @patch('builtins.input', side_effect=['clear', 'add', '3', '4', 'exit'])
 @patch('builtins.print')
@@ -333,7 +328,7 @@ def test_repl_unexpected_operation_error(mock_print, mock_input, monkeypatch):
 
     monkeypatch.setattr(Calculator, 'perform_operation', bad_operation)
     calculator_repl()
-    mock_print.assert_any_call('Unexpected error: Force fail')
+    mock_print.assert_any_call(Fore.RED + 'Unexpected error: Force fail')
 
 @patch('builtins.input', side_effect=['clear', 'my_opp', 'exit'])
 @patch('builtins.print')
@@ -342,7 +337,7 @@ def test_repl_unknown_operation(mock_print, mock_input):
     # Test unsupported operation
 
     calculator_repl()
-    mock_print.assert_any_call("Unknown command: 'my_opp'. Type 'help' for available commands.")
+    mock_print.assert_any_call(Fore.RED + "Unknown command: 'my_opp'. Type 'help' for available commands.")
 
 @patch('builtins.input', side_effect=['clear', 'exit'])
 @patch('builtins.print')
@@ -355,7 +350,7 @@ def test_repl_top_level_error(mock_print, mock_input, monkeypatch):
 
     monkeypatch.setattr(Calculator, 'add_observer', bad_add_observer)
     calculator_repl()
-    mock_print.assert_any_call('Fatal error: Force fail')
+    mock_print.assert_any_call(Fore.RED + 'Fatal error: Force fail')
 
 # Force input to fail
 class FakeInput1(str):
@@ -369,7 +364,7 @@ def test_repl_second_level_error(mock_print, mock_input):
     # Test second-level error
 
     calculator_repl()
-    mock_print.assert_any_call('Error: Force fail')
+    mock_print.assert_any_call(Fore.RED + 'Error: Force fail')
 
 # Force input to fail
 class FakeInput2(str):
@@ -383,7 +378,7 @@ def test_repl_keyboard_interrupt(mock_print, mock_input):
     # Test Keyboard Interrupt
 
     calculator_repl()
-    mock_print.assert_any_call('\nOperation cancelled')
+    mock_print.assert_any_call(Fore.YELLOW + '\nOperation cancelled')
 
 # Force input to fail
 class FakeInput3(str):
@@ -397,4 +392,4 @@ def test_repl_eof_error(mock_print, mock_input):
     # Test EOF Error
 
     calculator_repl()
-    mock_print.assert_any_call('\nInput terminated. Exiting...')
+    mock_print.assert_any_call(Fore.YELLOW + '\nInput terminated. Exiting...')
