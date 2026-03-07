@@ -55,7 +55,23 @@ def test_repl_help(mock_print, mock_input):
     # Test REPL Help
 
     calculator_repl()
-    mock_print.assert_any_call('\nAvailable commands:')
+
+    expected = [
+        'Available commands:',
+        '  add, subtract, multiply, divide, power, root, modulus, int_divide, percent, abs_diff - Perform calculations',
+        '  history - Show calculation history',
+        '  clear - Clear calculation history',
+        '  undo - Undo the last calculation',
+        '  redo - Redo the last undone calculation',
+        '  save - Save calculation history to file',
+        '  load - Load calculation history from file',
+        '  exit - Exit the calculator',
+    ]
+
+    actual = '\n'.join(call.args[0] for call in mock_print.call_args_list)
+
+    for line in expected:
+        assert line in actual
 
 @patch('builtins.input', side_effect=['add', '2', '3', 'exit'])
 @patch('builtins.print')
